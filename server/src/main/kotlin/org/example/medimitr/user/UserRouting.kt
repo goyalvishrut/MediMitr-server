@@ -1,0 +1,56 @@
+package org.example.medimitr.user
+
+import com.auth0.jwt.JWT
+import com.auth0.jwt.algorithms.Algorithm
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.application.Application
+import io.ktor.server.application.log
+import io.ktor.server.request.receive
+import io.ktor.server.response.respond
+import io.ktor.server.routing.post
+import io.ktor.server.routing.routing
+import org.example.medimitr.user.mode.LoginCredentialsRequest
+import org.example.medimitr.user.mode.UserRequest
+import org.example.medimitr.user.services.UserService
+import org.koin.ktor.ext.inject
+import java.util.Date
+
+fun Application.configureUserRouting() {
+    val userService by inject<UserService>()
+
+    routing {
+        post("/create/user") {
+            call.application.log.info("Handling POST /users request")
+            try {
+//                val rawBody = call.receiveText() // Log raw request body
+//                call.application.log.info("Raw request body: $rawBody")
+                val userRequest = call.receive<UserRequest>()
+                call.application.log.info("Parsed user request: $userRequest")
+                val userResponse = userService.createUser(userRequest)
+                call.application.log.info("User created: $userResponse")
+                call.respond(HttpStatusCode.Created, userResponse)
+            } catch (e: Exception) {
+                call.application.log.error("Failed to create user: ${e.message}")
+                call.respond(HttpStatusCode.BadRequest, "Error creating user: ${e.message}")
+            }
+        }
+
+        // Define routing block
+        post("/login") {
+            // POST /login endpoint
+            val credentials = call.receive<LoginCredentialsRequest>() // Receive login credentials from request body
+            val user = userService.findUserByEmail(credentials) // Find user by email
+            if (user != null) { // Check credentials
+                val token =
+                    JWT
+                        .create() // Create a new JWT
+                        .withClaim("userId", user.id) // Add userId claim
+                        .withExpiresAt(Date(System.currentTimeMillis() + 600000)) // Set expiration (10 minutes)
+                        .sign(Algorithm.HMAC256("your_secret_key")) // Sign with secret key
+                call.respond(mapOf("token" to token)) // Respond with token
+            } else {
+                call.respond(HttpStatusCode.Unauthorized, "Invalid credentials") // Respond with error if invalid
+            }
+        }
+    }
+}

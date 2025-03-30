@@ -1,18 +1,62 @@
 [versions]
 junit = "4.13.2"
+exposedCore = "0.41.1"
+javaJwt = "4.5.0"
+jbcrypt = "0.4"
+koinKtor = "4.0.2"
+koinCore = "4.0.2"
 kotlin = "2.1.10"
 ktor = "3.1.1"
+ktorClient = "3.1.1"
+ktorSerializationKotlinxJson = "3.1.1"
+ktorServer = "3.1.1"
+ktorServerTestsJvm = "2.3.5"
 logback = "1.5.17"
+mssqlJdbc = "10.2.0.jre11"
+mysqlConnectorJava = "8.0.33"
 
 [libraries]
+exposed-core = { module = "org.jetbrains.exposed:exposed-core", version.ref = "exposedCore" }
+exposed-java-time = { module = "org.jetbrains.exposed:exposed-java-time", version.ref = "exposedCore" }
+exposed-jdbc = { module = "org.jetbrains.exposed:exposed-jdbc", version.ref = "exposedCore" }
+java-jwt = { module = "com.auth0:java-jwt", version.ref = "javaJwt" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 logback = { module = "ch.qos.logback:logback-classic", version.ref = "logback" }
-ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktor" }
-ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktor" }
-ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktor" }
+
+# ktor-server
+ktor-server-core = { module = "io.ktor:ktor-server-core-jvm", version.ref = "ktorServer" }
+ktor-server-netty = { module = "io.ktor:ktor-server-netty-jvm", version.ref = "ktorServer" }
+ktor-server-tests = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktorServer" }
+ktor-ktor-server-content-negotiation = { module = "io.ktor:ktor-server-content-negotiation", version.ref = "ktorServer" }
+ktor-server-auth = { module = "io.ktor:ktor-server-auth", version.ref = "ktorServer" }
+ktor-server-auth-jwt = { module = "io.ktor:ktor-server-auth-jwt", version.ref = "ktorServer" }
+
+mssql-jdbc = { module = "com.microsoft.sqlserver:mssql-jdbc", version.ref = "mssqlJdbc" }
+
+# koin
+koin-core = { module = "io.insert-koin:koin-core", version.ref = "koinCore" }
+koin-ktor = { module = "io.insert-koin:koin-ktor", version.ref = "koinKtor" }
+
+
+# ktor-serialization
+ktor-ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx-json", version.ref = "ktorSerializationKotlinxJson" }
+
+# servers
+jbcrypt = { module = "org.mindrot:jbcrypt", version.ref = "jbcrypt" }
+mysql-connector-java = { module = "mysql:mysql-connector-java", version.ref = "mysqlConnectorJava" }
+
+# ktor-server-tests
+ktor-server-tests-jvm = { module = "io.ktor:ktor-server-tests-jvm", version.ref = "ktorServerTestsJvm" }
+
+# client
+
+# ktor-client
+ktor-ktor-client-cio = { module = "io.ktor:ktor-client-cio", version.ref = "ktorClient" }
+ktor-client-content-negotiation = { module = "io.ktor:ktor-client-content-negotiation", version.ref = "ktorClient" }
 
 [plugins]
 kotlinJvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktor = { id = "io.ktor.plugin", version.ref = "ktor" }
+kotlinSerialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
