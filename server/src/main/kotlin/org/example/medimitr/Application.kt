@@ -12,6 +12,7 @@ import io.ktor.server.auth.jwt.jwt
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
+import kotlinx.serialization.json.Json
 import org.example.medimitr.models.Medicines
 import org.example.medimitr.models.OrderItems
 import org.example.medimitr.models.Orders
@@ -57,7 +58,13 @@ fun Application.module() {
 
     // Install content negotiation plugin with JSON support
     install(ContentNegotiation) {
-        json() // Enable JSON serialization/deserialization
+        json(
+            Json {
+                ignoreUnknownKeys = true
+                prettyPrint = true
+                isLenient = true
+            },
+        ) // Enable JSON serialization/deserialization
     }
 
     install(Koin) {
