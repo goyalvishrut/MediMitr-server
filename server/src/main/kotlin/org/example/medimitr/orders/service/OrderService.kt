@@ -2,6 +2,7 @@ package org.example.medimitr.orders.service
 
 import org.example.medimitr.common.roundToTwoDecimalPlaces
 import org.example.medimitr.models.NewOrder
+import org.example.medimitr.models.Order
 import org.example.medimitr.orders.repo.OrderRepository
 
 class OrderService(
@@ -19,4 +20,13 @@ class OrderService(
             ),
         userProfileId = userId,
     )
+
+    fun getOrderById(
+        orderId: Int,
+        userId: Int,
+    ): Order? =
+        orderRepository.getOrderById(
+            orderId = orderId,
+            userId = userId,
+        )
 }

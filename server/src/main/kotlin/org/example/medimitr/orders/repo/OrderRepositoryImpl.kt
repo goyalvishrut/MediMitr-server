@@ -2,8 +2,10 @@ package org.example.medimitr.orders.repo
 
 import org.example.medimitr.models.NewOrder
 import org.example.medimitr.models.Order
+import org.example.medimitr.models.OrderItem
 import org.example.medimitr.models.OrderItems
 import org.example.medimitr.models.Orders
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -47,6 +49,17 @@ class OrderRepositoryImpl : OrderRepository {
                     totalAmount = row[Orders.totalAmount],
                     deliveryAddress = row[Orders.deliveryAddress],
                     phone = row[Orders.phone],
+                    items =
+                        OrderItems
+                            .select { OrderItems.orderId eq generatedOrderId }
+                            .map { itemRow ->
+                                // Select order items
+                                OrderItem(
+                                    medicineId = itemRow[OrderItems.medicineId],
+                                    quantity = itemRow[OrderItems.quantity],
+                                    price = itemRow[OrderItems.price],
+                                )
+                            }, // Map to OrderItems objects
                 ) // Map to Order object
             }
         }
@@ -66,7 +79,51 @@ class OrderRepositoryImpl : OrderRepository {
                     totalAmount = row[Orders.totalAmount],
                     deliveryAddress = row[Orders.deliveryAddress],
                     phone = row[Orders.phone],
+                    items =
+                        OrderItems
+                            .select { OrderItems.orderId eq row[Orders.id] }
+                            .map { itemRow ->
+                                // Select order items
+                                OrderItem(
+                                    medicineId = itemRow[OrderItems.medicineId],
+                                    quantity = itemRow[OrderItems.quantity],
+                                    price = itemRow[OrderItems.price],
+                                )
+                            }, // Map to OrderItems objects,
                 ) // Map to Order objects
             }
+        }
+
+    override fun getOrderById(
+        orderId: Int,
+        userId: Int,
+    ): Order? =
+        transaction {
+            // Run in a transaction
+            Orders
+                .select { (Orders.id eq orderId) and (Orders.userId eq userId) }
+                .map { row ->
+                    // Map to Order object
+                    Order(
+                        id = row[Orders.id],
+                        userId = row[Orders.userId],
+                        orderDate = row[Orders.orderDate],
+                        status = row[Orders.status],
+                        totalAmount = row[Orders.totalAmount],
+                        deliveryAddress = row[Orders.deliveryAddress],
+                        phone = row[Orders.phone],
+                        items =
+                            OrderItems
+                                .select { OrderItems.orderId eq row[Orders.id] }
+                                .map { itemRow ->
+                                    // Select order items
+                                    OrderItem(
+                                        medicineId = itemRow[OrderItems.medicineId],
+                                        quantity = itemRow[OrderItems.quantity],
+                                        price = itemRow[OrderItems.price],
+                                    )
+                                }, // Map to OrderItems objects,
+                    )
+                }.singleOrNull() // Return single order or null if not found
         }
 }

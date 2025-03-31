@@ -40,6 +40,28 @@ fun Application.configureOrdersRouting() {
                 val orders = orderService.getOrdersByUser(userId) // Get user orders
                 call.respond(orders) // Respond with order list
             }
+
+            get("/orders/{orderId}") {
+                // GET /orders/{orderId} endpoint
+                val principal = call.principal<JWTPrincipal>()
+                val userId =
+                    principal?.payload?.getClaim("userId")?.asInt()
+                        ?: return@get call.respond(HttpStatusCode.Unauthorized)
+
+                val orderId =
+                    call.parameters["orderId"]?.toIntOrNull() ?: return@get call.respond(
+                        HttpStatusCode.BadRequest,
+                        "Invalid orderId",
+                    ) // Handle invalid orderId
+
+                val order = orderService.getOrderById(orderId = orderId, userId = userId) // Get single order
+
+                if (order == null) {
+                    call.respond(HttpStatusCode.NotFound, "Order not found or unauthorized")
+                } else {
+                    call.respond(order)
+                }
+            }
         }
     }
 }

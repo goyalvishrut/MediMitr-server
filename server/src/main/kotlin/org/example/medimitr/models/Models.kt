@@ -52,6 +52,7 @@ data class Order(
     val totalAmount: Double, // Total cost
     val deliveryAddress: String, // Delivery address
     val phone: String, // Contact phone
+    val items: List<OrderItem>, // List of items in the order
 )
 
 @Serializable
