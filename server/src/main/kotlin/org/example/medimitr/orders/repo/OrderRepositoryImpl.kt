@@ -9,13 +9,16 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 class OrderRepositoryImpl : OrderRepository {
-    override suspend fun createOrder(order: NewOrder): Order =
+    override suspend fun createOrder(
+        order: NewOrder,
+        userProfileId: Int,
+    ): Order =
         transaction {
             // Run in a transaction
             val generatedOrderId =
                 Orders.insert {
                     // Insert into Orders table
-                    it[userId] = order.userId // Set user ID
+                    it[userId] = userProfileId // Set user ID
                     it[orderDate] = System.currentTimeMillis() // Set current timestamp
                     it[status] = "Pending" // Set initial status
                     it[totalAmount] = order.totalAmount // Set total amount

@@ -13,6 +13,7 @@ import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.server.plugins.contentnegotiation.ContentNegotiation
 import kotlinx.serialization.json.Json
+import org.example.medimitr.di.koinModules
 import org.example.medimitr.models.Medicines
 import org.example.medimitr.models.OrderItems
 import org.example.medimitr.models.Orders
@@ -69,7 +70,7 @@ fun Application.module() {
 
     install(Koin) {
         printLogger()
-        modules(serverModule(database)) // Load the dependency injection module
+        modules(koinModules(database)) // Load the dependency injection module
     }
 
     // Install JWT authentication

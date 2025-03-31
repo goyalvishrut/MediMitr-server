@@ -1,5 +1,6 @@
 package org.example.medimitr.medicines.repo
 
+import org.example.medimitr.common.roundToTwoDecimalPlaces
 import org.example.medimitr.models.Medicine
 import org.example.medimitr.models.Medicines
 import org.example.medimitr.models.NewMedicine
@@ -17,7 +18,7 @@ class MedicineRepositoryImpl : MedicineRepository {
                     row[Medicines.id],
                     row[Medicines.name],
                     row[Medicines.description],
-                    row[Medicines.price],
+                    row[Medicines.price].roundToTwoDecimalPlaces(),
                     row[Medicines.imageUrl],
                 ) // Map to Medicine objects
             }

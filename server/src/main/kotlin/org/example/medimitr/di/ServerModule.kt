@@ -1,4 +1,4 @@
-package org.example.medimitr
+package org.example.medimitr.di
 
 import org.example.medimitr.medicines.repo.MedicineRepository
 import org.example.medimitr.medicines.repo.MedicineRepositoryImpl
@@ -14,7 +14,7 @@ import org.koin.core.module.dsl.bind
 import org.koin.core.module.dsl.singleOf
 import org.koin.dsl.module
 
-fun serverModule(database: Database) =
+fun koinModules(database: Database) =
     module {
         single { database } // Provide the pre-connected database instance
         singleOf(::MedicineService)

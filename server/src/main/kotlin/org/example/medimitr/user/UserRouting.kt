@@ -22,8 +22,6 @@ fun Application.configureUserRouting() {
         post("/create/user") {
             call.application.log.info("Handling POST /users request")
             try {
-//                val rawBody = call.receiveText() // Log raw request body
-//                call.application.log.info("Raw request body: $rawBody")
                 val userRequest = call.receive<UserRequest>()
                 call.application.log.info("Parsed user request: $userRequest")
                 val userResponse = userService.createUser(userRequest)

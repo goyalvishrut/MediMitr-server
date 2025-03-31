@@ -65,7 +65,6 @@ data class OrderItem(
 @Serializable
 data class NewOrder(
     // DTO for creating a new order
-    val userId: Int, // User ID
     val items: List<OrderItem>, // List of items in the order
     val totalAmount: Double, // Total cost
     val deliveryAddress: String, // Delivery address

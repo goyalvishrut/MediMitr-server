@@ -26,8 +26,8 @@ fun Application.configureOrdersRouting() {
                 val userId =
                     principal?.payload?.getClaim("userId")?.asInt() // Extract userId from token
                         ?: return@post call.respond(HttpStatusCode.Unauthorized) // Return unauthorized if missing
-                val newOrder = call.receive<NewOrder>().copy(userId = userId) // Receive order and set userId
-                val order = orderService.createOrder(newOrder) // Create order
+                val newOrder = call.receive<NewOrder>() // Receive order and set userId
+                val order = orderService.createOrder(newOrder, userId) // Create order
                 call.respond(order) // Respond with created order
             }
 
