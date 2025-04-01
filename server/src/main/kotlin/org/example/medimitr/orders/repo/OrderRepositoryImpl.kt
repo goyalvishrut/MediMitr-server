@@ -1,5 +1,6 @@
 package org.example.medimitr.orders.repo
 
+import org.example.medimitr.models.Medicines
 import org.example.medimitr.models.NewOrder
 import org.example.medimitr.models.Order
 import org.example.medimitr.models.OrderItem
@@ -58,6 +59,13 @@ class OrderRepositoryImpl : OrderRepository {
                                     medicineId = itemRow[OrderItems.medicineId],
                                     quantity = itemRow[OrderItems.quantity],
                                     price = itemRow[OrderItems.price],
+                                    medicineName =
+                                        itemRow[OrderItems.medicineId].let { medicineId ->
+                                            // Get medicine name
+                                            Medicines
+                                                .select { Medicines.id eq medicineId }
+                                                .single()[Medicines.name]
+                                        },
                                 )
                             }, // Map to OrderItems objects
                 ) // Map to Order object
@@ -88,6 +96,13 @@ class OrderRepositoryImpl : OrderRepository {
                                     medicineId = itemRow[OrderItems.medicineId],
                                     quantity = itemRow[OrderItems.quantity],
                                     price = itemRow[OrderItems.price],
+                                    medicineName =
+                                        itemRow[OrderItems.medicineId].let { medicineId ->
+                                            // Get medicine name
+                                            Medicines
+                                                .select { Medicines.id eq medicineId }
+                                                .single()[Medicines.name]
+                                        },
                                 )
                             }, // Map to OrderItems objects,
                 ) // Map to Order objects
@@ -121,6 +136,14 @@ class OrderRepositoryImpl : OrderRepository {
                                         medicineId = itemRow[OrderItems.medicineId],
                                         quantity = itemRow[OrderItems.quantity],
                                         price = itemRow[OrderItems.price],
+                                        medicineName =
+                                            itemRow[OrderItems.medicineId].let { medicineId ->
+                                                // Get medicine name
+                                                Medicines
+                                                    .select { Medicines.id eq medicineId }
+                                                    .single()[Medicines.name]
+                                            },
+                                        // Get medicine name
                                     )
                                 }, // Map to OrderItems objects,
                     )

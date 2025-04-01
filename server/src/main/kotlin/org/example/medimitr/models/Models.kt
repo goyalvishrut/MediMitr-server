@@ -59,6 +59,7 @@ data class Order(
 data class OrderItem(
     // Order item entity
     val medicineId: Int, // Medicine ID
+    val medicineName: String, // Medicine name
     val quantity: Int, // Quantity ordered
     val price: Double, // Price per item
 )
