@@ -50,5 +50,21 @@ class UserRepositoryImpl : UserRepository {
             }
         }
 
+    override suspend fun findUserByUserId(userId: Int): User? =
+        transaction {
+            // Run in a transaction
+            Users.select { Users.id eq userId }.singleOrNull()?.let { row ->
+                // Select user by ID
+                User(
+                    row[Users.id],
+                    row[Users.email],
+                    row[Users.passwordHash],
+                    row[Users.name],
+                    row[Users.address],
+                    row[Users.phone],
+                ) // Map to User object
+            }
+        }
+
     private fun hashPassword(password: String): String = password // Placeholder for hashing (replace with BCrypt later)
 }

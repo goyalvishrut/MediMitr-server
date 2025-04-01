@@ -5,8 +5,12 @@ import com.auth0.jwt.algorithms.Algorithm
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.application.Application
 import io.ktor.server.application.log
+import io.ktor.server.auth.authenticate
+import io.ktor.server.auth.jwt.JWTPrincipal
+import io.ktor.server.auth.principal
 import io.ktor.server.request.receive
 import io.ktor.server.response.respond
+import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import org.example.medimitr.user.mode.LoginCredentialsRequest
@@ -48,6 +52,22 @@ fun Application.configureUserRouting() {
                 call.respond(mapOf("token" to token)) // Respond with token
             } else {
                 call.respond(HttpStatusCode.Unauthorized, "Invalid credentials") // Respond with error if invalid
+            }
+        }
+
+        authenticate {
+            get("/user") {
+                // GET /orders endpoint
+                val principal = call.principal<JWTPrincipal>() // Get JWT principal
+                val userId =
+                    principal?.payload?.getClaim("userId")?.asInt() // Extract userId
+                        ?: return@get call.respond(HttpStatusCode.Unauthorized) // Return unauthorized if missing
+                val user = userService.getUserById(userId) // Get user by ID
+                if (user == null) {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                } else {
+                    call.respond(user) // Respond with user details
+                }
             }
         }
     }

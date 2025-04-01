@@ -42,6 +42,8 @@ class UserService(
             }
         }
 
+    suspend fun getUserById(userId: Int): User? = userRepository.findUserByUserId(userId)
+
     private fun verifyPassword(
         password: String,
         hash: String,

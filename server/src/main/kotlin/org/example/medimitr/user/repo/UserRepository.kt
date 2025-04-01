@@ -7,4 +7,6 @@ interface UserRepository {
     suspend fun createUser(user: NewUser): User // Create a new user
 
     suspend fun findUserByEmail(email: String): User? // Find user by email
+
+    suspend fun findUserByUserId(userId: Int): User?
 }
