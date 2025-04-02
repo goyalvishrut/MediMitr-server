@@ -19,6 +19,8 @@ import org.example.medimitr.user.services.UserService
 import org.koin.ktor.ext.inject
 import java.util.Date
 
+private const val EXPIRY = 6000000 // 100 minutes
+
 fun Application.configureUserRouting() {
     val userService by inject<UserService>()
 
@@ -47,7 +49,7 @@ fun Application.configureUserRouting() {
                     JWT
                         .create() // Create a new JWT
                         .withClaim("userId", user.id) // Add userId claim
-                        .withExpiresAt(Date(System.currentTimeMillis() + 600000)) // Set expiration (10 minutes)
+                        .withExpiresAt(Date(System.currentTimeMillis() + EXPIRY)) // Set expiration (10 minutes)
                         .sign(Algorithm.HMAC256("your_secret_key")) // Sign with secret key
                 call.respond(mapOf("token" to token)) // Respond with token
             } else {
