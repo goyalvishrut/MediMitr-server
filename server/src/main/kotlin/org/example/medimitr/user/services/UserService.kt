@@ -54,4 +54,35 @@ class UserService(
     private fun getHashedPassword(password: String): String {
         return BCrypt.hashpw(password, BCrypt.gensalt()) // Hash the password
     }
+
+    suspend fun updateUserEmail(
+        userId: Int,
+        email: String,
+    ): User? = userRepository.updateUserEmail(userId, email)
+
+    suspend fun updateUserAddress(
+        userId: Int,
+        address: String,
+    ): User? = userRepository.updateUserAddress(userId, address)
+
+    suspend fun updateUserPhone(
+        userId: Int,
+        phone: String,
+    ): User? = userRepository.updateUserPhone(userId, phone) // Update user phone
+
+    suspend fun updateUserPassword(
+        userId: Int,
+        oldPassword: String,
+        newPassword: String,
+    ): User? =
+        getUserById(userId)?.let {
+            verifyPassword(oldPassword, it.passwordHash).let { isValid ->
+                if (isValid) {
+                    val hashedPassword = getHashedPassword(newPassword)
+                    userRepository.updateUserPassword(userId, hashedPassword)
+                } else {
+                    null
+                }
+            }
+        }
 }

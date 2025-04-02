@@ -14,6 +14,7 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.routing
 import org.example.medimitr.user.mode.LoginCredentialsRequest
+import org.example.medimitr.user.mode.PasswordChange
 import org.example.medimitr.user.mode.UserRequest
 import org.example.medimitr.user.services.UserService
 import org.koin.ktor.ext.inject
@@ -69,6 +70,71 @@ fun Application.configureUserRouting() {
                     call.respond(HttpStatusCode.NotFound, "User not found")
                 } else {
                     call.respond(user) // Respond with user details
+                }
+            }
+
+            post("/user/email") {
+                // POST /user/email endpoint
+                val principal = call.principal<JWTPrincipal>() // Get JWT principal
+                val userId =
+                    principal?.payload?.getClaim("userId")?.asInt() // Extract userId
+                        ?: return@post call.respond(HttpStatusCode.Unauthorized) // Return unauthorized if missing
+                val email = call.receive<String>() // Receive email from request body
+                val user = userService.updateUserEmail(userId, email) // Update user email
+                if (user == null) {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                } else {
+                    call.respond(true) // Respond with updated user details
+                }
+            }
+
+            post("/user/address") {
+                // POST /user/address endpoint
+                val principal = call.principal<JWTPrincipal>() // Get JWT principal
+                val userId =
+                    principal?.payload?.getClaim("userId")?.asInt() // Extract userId
+                        ?: return@post call.respond(HttpStatusCode.Unauthorized) // Return unauthorized if missing
+                val address = call.receive<String>() // Receive address from request body
+                val user = userService.updateUserAddress(userId, address) // Update user email
+                if (user == null) {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                } else {
+                    call.respond(true) // Respond with updated user details
+                }
+            }
+
+            post("/user/phone") {
+                // POST /user/phone endpoint
+                val principal = call.principal<JWTPrincipal>() // Get JWT principal
+                val userId =
+                    principal?.payload?.getClaim("userId")?.asInt() // Extract userId
+                        ?: return@post call.respond(HttpStatusCode.Unauthorized) // Return unauthorized if missing
+                val phone = call.receive<String>() // Receive address from request body
+                val user = userService.updateUserPhone(userId, phone) // Update user email
+                if (user == null) {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                } else {
+                    call.respond(true) // Respond with updated user details
+                }
+            }
+
+            post("/user/password") {
+                // POST /user/password endpoint
+                val principal = call.principal<JWTPrincipal>() // Get JWT principal
+                val userId =
+                    principal?.payload?.getClaim("userId")?.asInt() // Extract userId
+                        ?: return@post call.respond(HttpStatusCode.Unauthorized) // Return unauthorized if missing
+                val passwordRequest = call.receive<PasswordChange>() // Receive address from request body
+                val user =
+                    userService.updateUserPassword(
+                        userId,
+                        passwordRequest.oldPassword,
+                        passwordRequest.newPassword,
+                    ) // Update user email
+                if (user == null) {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                } else {
+                    call.respond(true) // Respond with updated user details
                 }
             }
         }

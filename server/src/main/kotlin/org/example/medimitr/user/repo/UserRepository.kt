@@ -9,4 +9,24 @@ interface UserRepository {
     suspend fun findUserByEmail(email: String): User? // Find user by email
 
     suspend fun findUserByUserId(userId: Int): User?
+
+    suspend fun updateUserEmail(
+        userId: Int,
+        email: String,
+    ): User?
+
+    suspend fun updateUserAddress(
+        userId: Int,
+        address: String,
+    ): User?
+
+    suspend fun updateUserPhone(
+        userId: Int,
+        phone: String,
+    ): User?
+
+    suspend fun updateUserPassword(
+        userId: Int,
+        hashedPassword: String,
+    ): User?
 }

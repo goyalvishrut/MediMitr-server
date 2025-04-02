@@ -16,3 +16,9 @@ data class LoginCredentialsRequest(
     val email: String,
     val password: String,
 ) // DTO for login request
+
+@Serializable
+data class PasswordChange(
+    val oldPassword: String,
+    val newPassword: String,
+)
