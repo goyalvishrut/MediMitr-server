@@ -1,3 +1,5 @@
+client - https://github.com/goyalvishrut/MediMitr-client
+
 This is a Kotlin Multiplatform project targeting Server.
 
 * `/server` is for the Ktor server application.
